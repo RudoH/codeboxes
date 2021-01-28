@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CodeEditor from './CodeEditor';
 import Preview from './Preview';
 import bundle from '../bundler';
@@ -8,11 +8,14 @@ import Resizable from './Resizable';
 const CodeCell = () => {
     const [code, setCode] = useState('');
     const [input, setInput] = useState('');
-    const onClick = async () => {
-        const output = await bundle(input);
-        setCode(output);
-    };
-    console.log(onClick);
+
+    useEffect(() => {
+        const bundleTimer = setTimeout(async () => {
+            const output = await bundle(input);
+            setCode(output);
+        }, 1000);
+        return () => clearTimeout(bundleTimer);
+    }, [input]);
 
     return (
         <div>
