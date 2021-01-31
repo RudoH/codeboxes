@@ -34,7 +34,7 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
             const index = state.order.findIndex((id) => id === action.payload.id);
             const targetIdx = direction === 'up' ? index - 1 : index + 1;
 
-            if (targetIdx < 0 || targetIdx > state.order.length - 1) return;
+            if (targetIdx < 0 || targetIdx > state.order.length - 1) return state;
 
             state.order[index] = state.order[targetIdx];
             state.order[targetIdx] = action.payload.id;
