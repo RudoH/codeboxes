@@ -1,4 +1,4 @@
-import { useSelector } from '../hooks/use-typed-selector';
+import { useSelector } from '../hooks/useTypedSelectors';
 import { Cell } from '../state';
 import CellListItem from './CellListItem';
 
