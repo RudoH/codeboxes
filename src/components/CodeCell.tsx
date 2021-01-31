@@ -1,23 +1,28 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useState, useEffect } from 'react';
 import CodeEditor from './CodeEditor';
 import Preview from './Preview';
 import bundle from '../bundler';
 import Resizable from './Resizable';
+import { Cell } from '../state';
+import { useActions } from '../hooks/useActions';
 
-const CodeCell = () => {
+interface CodeCellProps {
+    cell: Cell;
+}
+
+const CodeCell: React.FC<CodeCellProps> = ({ cell }: CodeCellProps) => {
     const [code, setCode] = useState('');
     const [err, setErr] = useState('');
-    const [input, setInput] = useState('');
+    const { updateCell } = useActions();
 
     useEffect(() => {
         const bundleTimer = setTimeout(async () => {
-            const output = await bundle(input);
+            const output = await bundle(cell.content);
             setCode(output.code);
             setErr(output.err);
         }, 1000);
         return () => clearTimeout(bundleTimer);
-    }, [input]);
+    }, [cell.content]);
 
     return (
         <div>
@@ -25,8 +30,8 @@ const CodeCell = () => {
                 <div style={{ height: '100%', display: 'flex', flexDirection: 'row' }}>
                     <Resizable direction="horizontal">
                         <CodeEditor
-                            initialValue="// Insert your code here"
-                            onChange={(value) => setInput(value)}
+                            initialValue={cell.content}
+                            onChange={(value) => updateCell(cell.id, value)}
                         />
                     </Resizable>
                     <Preview code={code} errorStatus={err} />
