@@ -4,6 +4,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { store } from './state';
 import CellList from './components/CellList';
+import './index.css';
 
 const App = () => {
     return (
