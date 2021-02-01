@@ -1,28 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import CodeEditor from './CodeEditor';
 import Preview from './Preview';
-import bundle from '../bundler';
 import Resizable from './Resizable';
 import { Cell } from '../state';
 import { useActions } from '../hooks/useActions';
+import { useSelector } from '../hooks/useTypedSelectors';
 
 interface CodeCellProps {
     cell: Cell;
 }
 
 const CodeCell: React.FC<CodeCellProps> = ({ cell }: CodeCellProps) => {
-    const [code, setCode] = useState('');
-    const [err, setErr] = useState('');
-    const { updateCell } = useActions();
+    const { updateCell, createBundle } = useActions();
+    const bundle = useSelector((state) => {
+        return state.bundles[cell.id];
+    });
 
     useEffect(() => {
+        if (!bundle) {
+            return createBundle(cell.id, cell.content);
+        }
+
         const bundleTimer = setTimeout(async () => {
-            const output = await bundle(cell.content);
-            setCode(output.code);
-            setErr(output.err);
+            createBundle(cell.id, cell.content);
         }, 1000);
         return () => clearTimeout(bundleTimer);
-    }, [cell.content]);
+        // eslint-disable-next-line
+    }, [cell.content, cell.id, createBundle]);
 
     return (
         <div>
@@ -34,7 +38,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }: CodeCellProps) => {
                             onChange={(value) => updateCell(cell.id, value)}
                         />
                     </Resizable>
-                    <Preview code={code} errorStatus={err} />
+                    {bundle && <Preview code={bundle.code} errorStatus={bundle.err} />}
                 </div>
             </Resizable>
         </div>

@@ -19,10 +19,8 @@ const TextEditor: React.FC<TextEditorProps> = ({ cell }: TextEditorProps) => {
                 editorRef.current &&
                 event.target &&
                 editorRef.current.contains(event.target as Node)
-            ) {
-                return console.log('inside editor');
-            }
-            console.log('outside editor');
+            )
+                return;
             setEditing(false);
         };
         document.addEventListener('click', clickListener, { capture: true });
