@@ -1,12 +1,12 @@
 .add-cell {
     position: relative;
     opacity: 0;
-    transition: opacity 0.3s ease-in 0.1s;
+    transition: opacity 0.2s ease-in 0.1s, padding 0.2s ease-in 0.15s;
 }
 
 .add-cell:hover {
     opacity: 1;
-    margin: 10px 0;
+    padding: 15px 0;
 }
 
 .add-cell .divider {
@@ -14,10 +14,17 @@
     top: 50%;
     bottom: 50%;
     border-bottom: 1px solid gray;
+    width: 60%;
+    right: 20%;
+    left: 20%;
+    z-index: -1;
+    transition: width 0.4s ease-in 0.15s, right 0.4s ease-in 0.15s, left 0.4s ease-in 0.15s;
+}
+
+.add-cell:hover .divider {
     width: 95%;
     right: 2.5%;
     left: 2.5%;
-    z-index: -1;
 }
 
 .add-cell .add-buttons {
