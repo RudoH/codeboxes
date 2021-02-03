@@ -17,24 +17,29 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }: CodeCellProps) => {
     const combinedCode = useSelector((state) => {
         const { data, order } = state.cells;
         const orderedCells = order.map((id) => data[id]);
-        const codeArray = [
-            `
-            import _React from 'react';;
-            import _ReactDOM from 'react-dom';
-            const show = (value) => {
-                const root = document.getElementById('root')
-                if (typeof value === 'object') {
-                    if (value.$$typeof && value.props) {
-                        _ReactDOM.render(value, root)
-                    } else root.innerHTML = JSON.stringify(value);
-                } else root.innerHTML = value;
-            }
-        `,
-        ];
+
+        const showFunc = `
+        import _React from 'react';
+        import _ReactDOM from 'react-dom';
+        var show = (value) => {
+            const root = document.getElementById('root')
+            if (typeof value === 'object') {
+                if (value.$$typeof && value.props) {
+                    _ReactDOM.render(value, root)
+                } else root.innerHTML = JSON.stringify(value);
+            } else root.innerHTML = value;
+        }
+    `;
+        const showFuncNoop = 'var show = () => {}';
+
+        const codeArray = [];
         for (const c of orderedCells) {
             if (c.type === 'code') {
-                codeArray.push(c.content);
+                if (c.id === cell.id) codeArray.push(showFunc);
+                else codeArray.push(showFuncNoop);
             }
+            codeArray.push(c.content);
+
             if (c.id === cell.id) {
                 break;
             }
